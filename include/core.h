@@ -4,19 +4,18 @@
 #ifndef CORE_H
 #define CORE_H
 
-struct Edge{
+typedef struct Edge{
     unsigned int u, v, w;
-};
-
-struct Graph{
-    unsigned int n;
+} Edge;
+typedef struct Graph{
+    unsigned int n, m;
     unsigned int **adj;
     Edge *edges;
-};
+} Graph;
 
-Graph *graph_create(size_t n);
-void graph_destroy(Graph *g);
-size_t graph_get_vertices(const Graph *g);
-Edge *graph_get_edges(const Graph *g, size_t *count);
+Graph *graph_create(unsigned int n); // cria um grafo com n vértices
+void graph_destroy(Graph *g); // libera a memória do grafo
+unsigned int graph_get_vertices(const Graph *g); // retorna o número de vértice
+Edge *graph_get_edges(const Graph *g, size_t *count); // retorna as arestas e sua quantidade
 
 #endif
