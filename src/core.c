@@ -45,14 +45,6 @@ unsigned int graph_get_vertices(const Graph *g){
     if(g == NULL) return 0;
     return g->n;
 }
-Edge *graph_get_edges(const Graph *g, size_t *count){
-    if(g == NULL || g->edges == NULL){
-        *count = 0;
-        return NULL;
-    }
 
-    *count = g->m;
-    return g->edges;
-}
 
 

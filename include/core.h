@@ -16,6 +16,5 @@ typedef struct Graph{
 Graph *graph_create(unsigned int n); // cria um grafo com n vértices
 void graph_destroy(Graph *g); // libera a memória do grafo
 unsigned int graph_get_vertices(const Graph *g); // retorna o número de vértice
-Edge *graph_get_edges(const Graph *g, size_t *count); // retorna as arestas e sua quantidade
 
 #endif
