@@ -1,7 +1,7 @@
-#include<stdlib.h>
-#include<assert.h>
 
 #ifndef CORE_H
+#include<stdlib.h>
+#include<assert.h>
 #define CORE_H
 
 typedef struct Edge{
