@@ -9,7 +9,7 @@ bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
         return false;
     }
     if(u < g->n && v < g->n){
-        g->adj[u][v] = g->adj[v][w] = w;
+        g->adj[u][v] = g->adj[v][u] = w;
         return true;
     }
     return false;
@@ -23,8 +23,8 @@ int graph_get_weight(const Graph *g,unsigned int u,unsigned int v){
         return 0;
     }
     if(u < g->n && v < g->n) return g->adj[u][v];
-    if(u >= g->n) fprintf(stderr, "%d não é vértice deste grafo!", &u);
-    if(v >= g->n) fprintf(stderr, "%d não é vértice deste grafo!", &v);
+    if(u >= g->n) fprintf(stderr, "%d não é vértice deste grafo!", u);
+    if(v >= g->n) fprintf(stderr, "%d não é vértice deste grafo!", v);
     return 0; 
 }
 
@@ -41,18 +41,20 @@ Edge *graph_get_edges(const Graph *g, int *count){
         fprintf(stderr, "Grafo não inicializado!");
         return NULL;
     }
+    if (count == NULL) return NULL;
 
     *count = 0;
     for(int i = 0; i < g->n; i++){
         for(int j = i; j < g->n; j++){
             if(g->adj[i][j] != 0){
-                *count++;
+                (*count)++;
             }
         }
     }
     Edge *e = malloc(*count * sizeof *e);
     if(e == NULL){
-        fprintf(stderr, "Memória insuficiente!");
+        if (*count != 0)
+            fprintf(stderr, "Memória insuficiente!");
         return NULL;
     }
 
@@ -60,7 +62,7 @@ Edge *graph_get_edges(const Graph *g, int *count){
     for(int i = 0; i < g->n; i++){
         for(int j = i; j < g->n; j++){
             if(g->adj[i][j] != 0){
-                e[*count++] = new_edge(i, j, g->adj[i][j]);
+                e[(*count)++] = new_edge(i, j, g->adj[i][j]);
             }
         }
     }
@@ -73,7 +75,7 @@ int graph_degree(const Graph *g, unsigned int u){
         return NULL;
     }
     if(u >= g->n){
-        fprintf(stderr, "%d não é vértice deste grafo!", &u);
+        fprintf(stderr, "%d não é vértice deste grafo!", u);
         return NULL;
     } 
     int deg = (int)(g->adj[u][u] != 0);
