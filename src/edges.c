@@ -14,10 +14,10 @@ bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
     }
     return false;
 }
-bool graph_remove_edge(Graph *g, int u, int v){
+bool graph_remove_edge(Graph *g,unsigned int u,unsigned int v){
     return graph_add_edge(g, u, v, 0);
 }
-int graph_get_weight(const Graph *g, int u, int v){
+int graph_get_weight(const Graph *g,unsigned int u,unsigned int v){
     if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
         return 0;
