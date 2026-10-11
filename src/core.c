@@ -18,6 +18,8 @@ Graph *graph_create(unsigned int n){
     g->adj = malloc(n * sizeof *(g->adj));
     if(g->adj == NULL){
         fprintf(stderr, "Memória insuficiente!");
+        free(g->adj);
+        free(g);
         return NULL;
     }
     
