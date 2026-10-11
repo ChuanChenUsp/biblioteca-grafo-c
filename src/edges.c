@@ -8,9 +8,12 @@ bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
         fprintf(stderr, "Grafo não inicializado!");
         return false;
     }
+    unsigned int old = g->adj[u][v];
+    g->adj[u][v] = g->adj[v][u] = w;
+    if (old == 0 && w != 0) g->m++;
+    if (old != 0 && w == 0) g->m--;
     if(u < g->n && v < g->n){
-        g->adj[u][v] = g->adj[v][u] = w;
-        return true;
+    return true;
     }
     return false;
 }
@@ -72,11 +75,11 @@ Edge *graph_get_edges(const Graph *g, int *count){
 int graph_degree(const Graph *g, unsigned int u){
     if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
-        return NULL;
+        return -1;
     }
     if(u >= g->n){
         fprintf(stderr, "%d não é vértice deste grafo!", u);
-        return NULL;
+        return -1;
     } 
     int deg = (int)(g->adj[u][u] != 0);
     for(int i = 0; i < g->n; i++){
