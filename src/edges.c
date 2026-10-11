@@ -8,16 +8,15 @@ bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
         fprintf(stderr, "Grafo não inicializado!");
         return false;
     }
-    unsigned int old = g->adj[u][v];
+    if (g->adj[u][v] == 0 && w != 0) g->m++;
     g->adj[u][v] = g->adj[v][u] = w;
-    if (old == 0 && w != 0) g->m++;
-    if (old != 0 && w == 0) g->m--;
     if(u < g->n && v < g->n){
-    return true;
+        return true;
     }
     return false;
 }
 bool graph_remove_edge(Graph *g,unsigned int u,unsigned int v){
+    if(g->adj[u][v] != 0) g->m--;
     return graph_add_edge(g, u, v, 0);
 }
 int graph_get_weight(const Graph *g,unsigned int u,unsigned int v){
