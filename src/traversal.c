@@ -165,7 +165,7 @@ int graph_distance_length(const Graph *g, unsigned int u, unsigned int v){
  *         ou faltar memória.
  * @note Custo: O(n^2) de tempo e O(n) de memória extra.
  * @warning Assume que a soma dos pesos do caminho cabe em int.
- * @see graph_distance_lenght
+ * @see graph_distance_length
  */
 int graph_distance_weight(const Graph *g, unsigned int u, unsigned int v){
     if(g == NULL || u >= g->n || v >= g->n) return -1;  
