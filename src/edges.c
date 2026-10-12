@@ -30,7 +30,7 @@ int graph_get_weight(const Graph *g,unsigned int u,unsigned int v){
     return 0; 
 }
 
-Edge new_edge(unsigned int u, unsigned int v, unsigned int w){
+static Edge new_edge(unsigned int u, unsigned int v, unsigned int w){
     Edge e;
     e.u = u;
     e.v = v;
