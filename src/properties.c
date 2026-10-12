@@ -175,3 +175,76 @@ bool graph_is_forest(const Graph *g) {
 
     return !graph_has_cycle(g);
 }
+
+bool graph_is_bipartite(const Graph *g) {
+    // Verifica se o grafo foi inicializado.
+    if (g == NULL) {
+        fprintf(stderr, "Grafo não inicializado!");
+        return false;
+    }
+
+    // Um grafo vazio é bipartido.
+    if (g->n == 0)
+        return true;
+
+    // Aloca o vetor de cores dos vértices.
+    // -1: não colorido; 0 e 1: cores possíveis.
+    int *colors = malloc(g->n * sizeof *colors);
+    if (colors == NULL) {
+        fprintf(stderr, "Memória insuficiente!");
+        return false;
+    }
+
+    // Aloca a pilha utilizada na busca em profundidade.
+    unsigned int *stack = malloc(g->n * sizeof *stack);
+    if (stack == NULL) {
+        fprintf(stderr, "Memória insuficiente!");
+        free(colors);
+        return false;
+    }
+
+    // Inicializa todos os vértices como não coloridos.
+    for (unsigned int i = 0; i < g->n; i++)
+        colors[i] = -1;
+
+    // Percorre todas as componentes do grafo.
+    for (unsigned int i = 0; i < g->n; i++) {
+        if (colors[i] != -1)
+            continue;
+
+        unsigned int top = 0;
+
+        // Atribui a primeira cor ao vértice inicial.
+        colors[i] = 0;
+        stack[top++] = i;
+
+        // Explora os vértices da componente atual.
+        while (top > 0) {
+            unsigned int u = stack[--top];
+
+            for (unsigned int v = 0; v < g->n; v++) {
+
+                // Ignora pares de vértices sem aresta.
+                if (g->adj[u][v] == 0)
+                    continue;
+
+                // Vértices adjacentes devem ter cores diferentes.
+                if (colors[v] == -1) {
+                    colors[v] = 1 - colors[u];
+                    stack[top++] = v;
+                }
+                else if (colors[v] == colors[u]) {
+                    free(stack);
+                    free(colors);
+                    return false;
+                }
+            }
+        }
+    }
+
+    // Libera a memória alocada.
+    free(stack);
+    free(colors);
+
+    return true;
+}
