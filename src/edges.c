@@ -3,6 +3,7 @@
 #include<stdbool.h>
 #include "edges.h"
 
+
 bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
     if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
