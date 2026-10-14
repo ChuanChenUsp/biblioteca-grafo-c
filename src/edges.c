@@ -4,16 +4,19 @@
 #include "edges.h"
 
 bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
-    if(g == NULL){
+if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
         return false;
     }
-    if (g->adj[u][v] == 0 && w != 0) g->m++;
+    if(u >= g->n || v >= g->n) return false;
+    
+    unsigned int old = g->adj[u][v];
     g->adj[u][v] = g->adj[v][u] = w;
-    if(u < g->n && v < g->n){
-        return true;
-    }
-    return false;
+    
+    if (old == 0 && w != 0)      g->m++;
+    else if (old != 0 && w == 0) g->m--;
+    
+    return true;
 }
 bool graph_remove_edge(Graph *g,unsigned int u,unsigned int v){
     if(g->adj[u][v] != 0) g->m--;
