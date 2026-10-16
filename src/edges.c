@@ -3,22 +3,22 @@
 #include<stdbool.h>
 #include "edges.h"
 
+
 bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
     if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
         return false;
     }
-    if (g->adj[u][v] == 0 && w != 0) g->m++;
+    if(u >= g->n || v >= g->n) return false;
+    unsigned int old = g->adj[u][v];
     g->adj[u][v] = g->adj[v][u] = w;
-    if(u < g->n && v < g->n){
-        return true;
-    }
-    return false;
+    if (old == 0 && w != 0)      g->m++;
+    else if (old != 0 && w == 0) g->m--;
+    return true;
 }
 
 
 bool graph_remove_edge(Graph *g,unsigned int u,unsigned int v){
-    if(g->adj[u][v] != 0) g->m--;
     return graph_add_edge(g, u, v, 0);
 }
 
@@ -58,8 +58,8 @@ Edge *graph_get_edges(const Graph *g, int *count){
     if (count == NULL) return NULL;
 
     *count = 0;
-    for(int i = 0; i < g->n; i++){
-        for(int j = i; j < g->n; j++){
+    for(unsigned int i = 0; i < g->n; i++){
+        for(unsigned int j = i; j < g->n; j++){
             if(g->adj[i][j] != 0){
                 (*count)++;
             }
@@ -73,8 +73,8 @@ Edge *graph_get_edges(const Graph *g, int *count){
     }
 
     *count = 0;
-    for(int i = 0; i < g->n; i++){
-        for(int j = i; j < g->n; j++){
+    for(unsigned int i = 0; i < g->n; i++){
+        for(unsigned int j = i; j < g->n; j++){
             if(g->adj[i][j] != 0){
                 e[(*count)++] = new_edge(i, j, g->adj[i][j]);
             }
@@ -93,7 +93,7 @@ int graph_degree(const Graph *g, unsigned int u){
         return -1;
     } 
     int deg = (int)(g->adj[u][u] != 0);
-    for(int i = 0; i < g->n; i++){
+    for(unsigned int i = 0; i < g->n; i++){
         if(g->adj[u][i] != 0) deg++;
     }
     return deg;

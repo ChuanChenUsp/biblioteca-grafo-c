@@ -150,6 +150,7 @@ int graph_distance_length(const Graph *g, unsigned int u, unsigned int v){
     free(fila);
     return resultado;
 }
+
 /**
  * @brief Menor distância de @p u até @p v, medida pela soma dos pesos das arestas.
  *
@@ -211,3 +212,123 @@ int graph_distance_weight(const Graph *g, unsigned int u, unsigned int v){
     free(done);
     return resultado;
 }
+
+/**
+ * @brief Menores distâncias, em número de arestas, de @p u até todos os vértices.
+ *
+ * Executa a BFS uma única vez, sem parar cedo; os pesos das arestas são ignorados.
+ * Custo: O(n^2) de tempo e O(n) de memória extra.
+ *
+ * @param g Grafo.
+ * @param u Vértice de origem.
+ * @return Array alocado dinamicamente com n posições, onde [v] é a distância de
+ *         @p u até v (0 para o próprio u, -1 se v for inalcançável). Quem chama
+ *         deve liberá-lo com free(). NULL se @p g for NULL, @p u for inválido
+ *         ou faltar memória.
+ * @see graph_distance_length
+ * @see graph_weight_distance
+ */
+int *graph_distance_length_all(const Graph *g, unsigned int u){
+    if(g == NULL || u >= g->n) return NULL;
+
+    // dist[i]: distância de u até i (-1 = ainda não descoberto)
+    // fila:    vértices descobertos, na ordem em que serão processados
+    int *dist = malloc(g->n * sizeof *dist);
+    unsigned int *fila = malloc(g->n * sizeof *fila);
+    if(dist == NULL || fila == NULL){
+        free(dist);                         
+        free(fila);
+        fprintf(stderr, "Memória insuficiente!\n");
+        return NULL;
+    }
+
+    for(unsigned int i = 0; i < g->n; i++){
+        dist[i] = -1;
+    }
+
+    // a origem está a distância 0 e é a primeira da fila
+    unsigned int inicio = 0;
+    unsigned int fim = 0;
+    dist[u] = 0;
+    fila[fim++] = u;
+
+    // processa a fila em "ondas", até esgotar todos os alcançáveis
+    while(inicio < fim){
+        unsigned int atual = fila[inicio++];
+
+        for(unsigned int i = 0; i < g->n; i++){
+            if(g->adj[atual][i] != 0 && dist[i] == -1){
+                dist[i] = dist[atual] + 1;
+                fila[fim++] = i;
+            }
+        }
+    }
+
+    free(fila);
+    return dist;                                 // quem chama deve liberar com free()
+}
+
+/**
+ * @brief Menores distâncias (soma dos pesos) de @p u até todos os vértices.
+ *
+ * Executa o algoritmo de Dijkstra uma única vez, sem parar cedo, que exige
+ * pesos não negativos (garantido aqui: o peso é unsigned e 0 significa
+ * "sem aresta").
+ * Custo: O(n^2) de tempo e O(n) de memória extra.
+ *
+ * @param g Grafo.
+ * @param u Vértice de origem.
+ * @return Array alocado dinamicamente com n posições, onde [v] é a distância de
+ *         @p u até v (0 para o próprio u, -1 se v for inalcançável). Quem chama
+ *         deve liberá-lo com free(). NULL se @p g for NULL, @p u for inválido
+ *         ou faltar memória.
+ * @warning Assume que a soma dos pesos de um caminho cabe em int.
+ * @see graph_distance_weight
+ */
+int *graph_distance_weight_all(const Graph *g, unsigned int u){
+    if(g == NULL || u >= g->n) return NULL;
+
+    // dist[i]: menor custo conhecido até i (INF = desconhecido)
+    // done[i]: true quando dist[i] já é o valor final
+    int *dist = malloc(g->n * sizeof *dist);
+    bool *done = calloc(g->n, sizeof *done);
+    if(dist == NULL || done == NULL){
+        free(dist);                              
+        free(done);
+        fprintf(stderr, "Memória insuficiente!\n");
+        return NULL;
+    }
+
+    for(unsigned int i = 0; i < g->n; i++) dist[i] = INF;
+    dist[u] = 0;
+
+    for(unsigned int passo = 0; passo < g->n; passo++){
+        // escolhe x = o não concluído de menor dist ("fila de prioridade").
+        unsigned int x = 0;
+        int melhor = INF;
+        for(unsigned int i = 0; i < g->n; i++){
+            if(!done[i] && dist[i] < melhor){
+                melhor = dist[i];
+                x = i;
+            }
+        }
+        if(melhor == INF) break;                 // o resto é inalcançável
+
+        done[x] = true;
+
+        // passar por x melhora o custo de chegar em y?
+        for(unsigned int y = 0; y < g->n; y++){
+            if(g->adj[x][y] != 0 && !done[y]){
+                int nova = dist[x] + (int)g->adj[x][y];
+                if(nova < dist[y]) dist[y] = nova;
+            }
+        }
+    }
+    for(unsigned int i = 0; i < g->n; i++){
+        if(dist[i] == INF) dist[i] = -1;
+    }
+
+    free(done);
+    return dist;                                 // quem chama deve liberar com free()
+}
+
