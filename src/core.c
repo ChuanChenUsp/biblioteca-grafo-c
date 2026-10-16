@@ -2,7 +2,6 @@
 #include<stdio.h>
 #include "core.h"
 
-
 Graph *graph_create(unsigned int n){
     Graph *g = malloc(sizeof *g);
     if(g == NULL){
@@ -13,7 +12,6 @@ Graph *graph_create(unsigned int n){
 
     g->n = n;
     g->m = 0;
-    g->edges =  NULL;
 
     g->adj = malloc(n * sizeof *(g->adj));
     if(g->adj == NULL){
@@ -38,6 +36,7 @@ Graph *graph_create(unsigned int n){
     }
     return g;
 }
+
 void graph_destroy(Graph *g){
     if(g == NULL) return;
 
@@ -45,10 +44,5 @@ void graph_destroy(Graph *g){
     free(g->adj);
     free(g);
 }
-unsigned int graph_get_vertices(const Graph *g){
-    if(g == NULL) return 0;
-    return g->n;
-}
-
 
 
