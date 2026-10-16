@@ -229,7 +229,7 @@ int graph_distance_weight(const Graph *g, unsigned int u, unsigned int v){
  * @warning Assume que a soma dos pesos de um caminho cabe em int.
  * @see graph_distance_weight
  */
-int *graph_all_distances(const Graph *g, unsigned int u){
+int *graph_weight_distance(const Graph *g, unsigned int u){
     if(g == NULL || u >= g->n) return NULL;
 
     // dist[i]: menor custo conhecido até i (INF = desconhecido)
@@ -289,9 +289,9 @@ int *graph_all_distances(const Graph *g, unsigned int u){
  *         deve liberá-lo com free(). NULL se @p g for NULL, @p u for inválido
  *         ou faltar memória.
  * @see graph_distance_length
- * @see graph_all_distances
+ * @see graph_weight_distance
  */
-int *graph_all_distances_length(const Graph *g, unsigned int u){
+int *graph_edges_distance(const Graph *g, unsigned int u){
     if(g == NULL || u >= g->n) return NULL;
 
     // dist[i]: distância de u até i (-1 = ainda não descoberto)
