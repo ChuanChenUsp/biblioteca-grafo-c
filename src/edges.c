@@ -58,6 +58,7 @@ Edge *graph_get_edges(const Graph *g, int *count){
     if (count == NULL) return NULL;
 
     *count = 0;
+
     for(unsigned int i = 0; i < g->n; i++){
         for(unsigned int j = i; j < g->n; j++){
             if(g->adj[i][j] != 0){
