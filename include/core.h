@@ -1,9 +1,7 @@
 
 #ifndef CORE_H
-#include<stdlib.h>
-#include<assert.h>
 #define CORE_H
-
+#include<stdlib.h>
 typedef struct Edge{
     unsigned int u, v, w;
 } Edge;

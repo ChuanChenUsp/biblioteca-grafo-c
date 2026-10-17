@@ -1,9 +1,9 @@
 
 #ifndef EDGES_H
+#define EDGES_H
 #include<stdlib.h>
 #include<stdbool.h> 
 #include "core.h"
-#define EDGES_H
 
 bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w); // adiciona a aresta u-v com peso w
 bool graph_remove_edge(Graph *g, unsigned int u,unsigned int v); // remove a aresta entre u e v 
