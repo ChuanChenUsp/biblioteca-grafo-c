@@ -1,9 +1,9 @@
 
 #ifndef EDGES_H
+#define EDGES_H
 #include<stdlib.h>
 #include<stdbool.h> 
 #include "core.h"
-#define EDGES_H
 
 
 /**

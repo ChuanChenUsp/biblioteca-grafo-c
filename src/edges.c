@@ -5,15 +5,18 @@
 
 
 bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
-    if(g == NULL){
+if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
         return false;
     }
     if(u >= g->n || v >= g->n) return false;
+    
     unsigned int old = g->adj[u][v];
     g->adj[u][v] = g->adj[v][u] = w;
+    
     if (old == 0 && w != 0)      g->m++;
     else if (old != 0 && w == 0) g->m--;
+    
     return true;
 }
 
