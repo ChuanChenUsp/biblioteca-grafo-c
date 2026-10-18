@@ -69,7 +69,7 @@ int main(void){
     graph_add_edge(g, 2, 3, 1);
     graph_add_edge(g, 2, 4, 1);
 
-    int *d = graph_all_distances_length(g, 0);          // distâncias a partir do 0
+    int *d = graph_distance_length_all(g, 0);          // distâncias a partir do 0
     if(d == NULL) return 1;
     unsigned int a = 0;
     for(unsigned int v = 1; v < graph_get_vertices(g); v++){
@@ -77,7 +77,7 @@ int main(void){
     }
     free(d);
 
-    d = graph_all_distances_length(g, a);               // distâncias a partir de a
+    d = graph_distance_length_all(g, a);               // distâncias a partir de a
     if(d == NULL) return 1;
     int diametro = 0;
     for(unsigned int v = 0; v < graph_get_vertices(g); v++){
