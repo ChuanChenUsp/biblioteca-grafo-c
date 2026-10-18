@@ -13,10 +13,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "core.h"
-#include "edges.h"
-#include "traversal.h"
-#include "properties.h"
+#include "graph.h"
+
 
 int main(void){
 
