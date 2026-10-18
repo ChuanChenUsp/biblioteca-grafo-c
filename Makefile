@@ -91,5 +91,15 @@ test: $(TEST)
 clean:
 	rm -rf build/* bin/* lib/*
 
+# =========================
+# Instalação
+# =========================
+PREFIX?=$(HOME)/.local
+
+install: all
+	mkdir -p $(PREFIX)/include
+	mkdir -p $(PREFIX)/lib
+	cp -r lib/* $(PREFIX)/lib/
+	cp -r include/* $(PREFIX)/include/
 
 .PHONY: all clean run test install
