@@ -5,20 +5,27 @@
 
 
 bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w){
-    if(g == NULL){
+if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
         return false;
     }
     if(u >= g->n || v >= g->n) return false;
+    
     unsigned int old = g->adj[u][v];
     g->adj[u][v] = g->adj[v][u] = w;
+    
     if (old == 0 && w != 0)      g->m++;
     else if (old != 0 && w == 0) g->m--;
+    
     return true;
 }
+
+
 bool graph_remove_edge(Graph *g,unsigned int u,unsigned int v){
     return graph_add_edge(g, u, v, 0);
 }
+
+
 int graph_get_weight(const Graph *g,unsigned int u,unsigned int v){
     if(g == NULL){
         fprintf(stderr, "Grafo não inicializado!");
@@ -30,6 +37,14 @@ int graph_get_weight(const Graph *g,unsigned int u,unsigned int v){
     return 0; 
 }
 
+/**
+ * @brief Cria uma aresta de tipo Edge.
+ *
+ * @param u        Um lado da aresta.
+ * @param v        Outro lado da aresta.
+ * @param w        Peso da aresta.
+ * @return A aresta criada.
+ */
 static Edge new_edge(unsigned int u, unsigned int v, unsigned int w){
     Edge e;
     e.u = u;
@@ -46,6 +61,7 @@ Edge *graph_get_edges(const Graph *g, int *count){
     if (count == NULL) return NULL;
 
     *count = 0;
+
     for(unsigned int i = 0; i < g->n; i++){
         for(unsigned int j = i; j < g->n; j++){
             if(g->adj[i][j] != 0){
