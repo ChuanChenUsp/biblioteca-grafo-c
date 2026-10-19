@@ -26,7 +26,6 @@ bool graph_add_edge(Graph *g, unsigned int u, unsigned int v, unsigned int w);
  * @param g        Ponteiro para o grafo.
  * @param u        Primeiro vértice.
  * @param v        Segundo vértice.
- * @param w        Peso da aresta.
  * @return true em caso de sucesso, false em caso de erro.
  * 
  * @note A quantidade de aresta será mudado correspondentemente.
