@@ -203,12 +203,8 @@ int graph_distance_weight(const Graph *g, unsigned int u, unsigned int v){
             if( g->adj[x][y] != 0 && !done[y]){   
                  unsigned int peso = g->adj[x][y];
 
-                if (peso > (unsigned int)(INT_MAX - dist[x])) {
-                    free(dist);
-                    free(done);
-                    return -1;
-                }
-                      
+                if (peso > (unsigned int)(INT_MAX - dist[x])) continue;
+                
                 int nova = dist[x] + (int)g->adj[x][y];      
                 if (nova < dist[y]) dist[y] = nova;
             }
@@ -329,11 +325,7 @@ int *graph_distance_weight_all(const Graph *g, unsigned int u){
             if(g->adj[x][y] != 0 && !done[y]){
                 unsigned int peso = g->adj[x][y];
 
-                if (peso > (unsigned int)(INT_MAX - dist[x])) {
-                    free(dist);
-                    free(done);
-                    return NULL;
-                }
+                if (peso > (unsigned int)(INT_MAX - dist[x])) continue;
                 
                 int nova = dist[x] + (int)g->adj[x][y];
                 if(nova < dist[y]) dist[y] = nova;
