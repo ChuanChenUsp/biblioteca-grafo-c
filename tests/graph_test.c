@@ -225,10 +225,24 @@ int main(void){
     printf("Tamanho de componente de 6: %d\n", graph_component_size(g, 6));
     assert(graph_component_size(g, 6) == 0);
 
-
     free(edges);
     free(qtd_edges);
     graph_destroy(g);
 
+    printf("================================\n");
+    
+    printf("8. Testar overflow em graph_distance_weight\n");
+
+    g = graph_create(3);
+   
+    assert(graph_add_edge(g, 0, 1, 1500000000));
+    assert(graph_add_edge(g, 1, 2, 1000000000));
+
+    int distancia = graph_distance_weight(g, 0, 2);
+
+    printf("Distância com possível overflow: %d\n", distancia);
+
+    graph_destroy(g);
     return 0;
 }
+    
