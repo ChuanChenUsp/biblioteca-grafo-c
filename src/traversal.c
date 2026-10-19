@@ -200,7 +200,15 @@ int graph_distance_weight(const Graph *g, unsigned int u, unsigned int v){
         if(x == v) break;
 
         for(unsigned int y = 0; y < g->n; y++){         //  Passar por x melhora o custo de y?
-            if( g->adj[x][y] != 0 && !done[y]){         
+            if( g->adj[x][y] != 0 && !done[y]){   
+                 unsigned int peso = g->adj[x][y];
+
+                if (peso > (unsigned int)(INT_MAX - dist[x])) {
+                    free(dist);
+                    free(done);
+                    return -1;
+                }
+                      
                 int nova = dist[x] + (int)g->adj[x][y];      
                 if (nova < dist[y]) dist[y] = nova;
             }
@@ -319,6 +327,14 @@ int *graph_distance_weight_all(const Graph *g, unsigned int u){
         // passar por x melhora o custo de chegar em y?
         for(unsigned int y = 0; y < g->n; y++){
             if(g->adj[x][y] != 0 && !done[y]){
+                unsigned int peso = g->adj[x][y];
+
+                if (peso > (unsigned int)(INT_MAX - dist[x])) {
+                    free(dist);
+                    free(done);
+                    return NULL;
+                }
+                
                 int nova = dist[x] + (int)g->adj[x][y];
                 if(nova < dist[y]) dist[y] = nova;
             }
