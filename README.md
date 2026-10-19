@@ -314,3 +314,9 @@ Caso seja utilizada a biblioteca dinâmica, pode ser necessário executar:
 ```bash
 LD_LIBRARY_PATH=$HOME/.loc/lib ./programa
 ```
+
+---
+
+## 8. Documentação
+
+A documentação foi realizada através de Doxygen. Acesse `./html/index.html` para mais detalhe.
