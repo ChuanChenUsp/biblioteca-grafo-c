@@ -7,11 +7,13 @@ int main(void){
 
     printf("================================\n");
     printf("1. Criar um grafo g com 6 vértices\n");
-    printf("================================\n");
+    // printf("================================\n");
     Graph *g;
     g = graph_create(6);
 
     assert(g != NULL);
+    printf("Quantidade de vértices: %d\n", graph_get_vertices(g));
+    assert(graph_get_vertices(g) == 6);
 
     assert(graph_add_edge(g, 0, 1, 4));
     assert(graph_add_edge(g, 0, 2, 2));
@@ -23,7 +25,7 @@ int main(void){
 
     printf("================================\n");
     printf("2. Testar o módulo Edges\n");
-    printf("================================\n");
+    // printf("================================\n");
 
     printf("Peso de (0, 1): %d\n", graph_get_weight(g, 0, 1));
     assert(graph_get_weight(g, 0, 1) == 4);
@@ -60,7 +62,7 @@ int main(void){
 
     printf("================================\n");
     printf("3. Testar Traversal\n");
-    printf("================================\n");
+    // printf("================================\n");
 
     printf("0 alcança 5? %d\n", graph_is_reachable(g, 0, 5));
     assert(graph_is_reachable(g, 0, 5) == true);
@@ -95,7 +97,7 @@ int main(void){
 
     printf("================================\n");
     printf("4. Testar Properties no grafo inicial\n");
-    printf("================================\n");
+    // printf("================================\n");
 
     printf("Conectado? %d\n", graph_is_connected(g));
     assert(graph_is_connected(g) == true);
@@ -115,7 +117,7 @@ int main(void){
 
     printf("================================\n");
     printf("5. Criar um ciclo\n");
-    printf("================================\n");  
+    // printf("================================\n");  
 
     assert(graph_add_edge(g, 1, 2, 1));
 
@@ -151,7 +153,7 @@ int main(void){
 
     printf("================================\n");
     printf("6. Testar remoção de arestas\n");
-    printf("================================\n");
+    // printf("================================\n");
 
     assert(graph_remove_edge(g, 2, 4));
 
@@ -200,7 +202,7 @@ int main(void){
 
     printf("================================\n");
     printf("7. Testes de entradas inválidas\n");
-    printf("================================\n");
+    // printf("================================\n");
 
     printf("Grau de 6: %d\n", graph_degree(g, 6));
     assert(graph_degree(g, 6) == -1);
