@@ -1,3 +1,9 @@
+/**
+ * @file graph_test.c
+ * @brief Teste de todas as funções públicas da biblioteca através de assert.
+ */
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
