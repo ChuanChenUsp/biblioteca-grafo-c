@@ -1,29 +1,19 @@
-CC = gcc
+# =========================
+# Variáveis Globais
+# =========================CC = gcc
 
 CFLAGS = -Wall -Iinclude
 PICFLAGS = -fPIC
-
-SRC = src/core.c \
-      src/edges.c \
-      src/traversal.c \
-      src/properties.c
+LIBFLAG = -Llib -lgraph
 
 OBJ = build/core.o \
       build/edges.o \
       build/traversal.o \
       build/properties.o
 
-LIB_STATIC = lib/libgraph.a
-LIB_SHARED = lib/libgraph.so
-
-APP = bin/graph_app
-TEST = bin/graph_test
-
-
 # =========================
 # Alvo principal
 # =========================
-
 all: $(LIB_STATIC) $(LIB_SHARED) $(APP)
 
 # =========================
@@ -45,7 +35,7 @@ build/properties.o: src/properties.c include/properties.h include/core.h
 # =========================
 # Biblioteca estática
 # =========================
-
+LIB_STATIC = lib/libgraph.a
 $(LIB_STATIC): $(OBJ)
 	ar rcs $(LIB_STATIC) $(OBJ)
 
@@ -53,23 +43,22 @@ $(LIB_STATIC): $(OBJ)
 # =========================
 # Biblioteca dinâmica
 # =========================
-
+LIB_SHARED = lib/libgraph.so
 $(LIB_SHARED): $(OBJ)
-	$(CC) -shared -o $(LIB_SHARED) $(OBJ)
+	$(CC) -shared -o $(LIB_SHARED) $(LIBFLAG) $(OBJ)
 
 
 # =========================
 # Aplicação cliente
 # =========================
-
+APP = bin/graph_app
 $(APP): app/main.c
-	$(CC) $(CFLAGS) app/main.c -Llib -lgraph -o $(APP)
+	$(CC) $(CFLAGS) app/main.c  -o $(APP)
 
 
 # =========================
 # Executar aplicação
 # =========================
-
 run: $(APP)
 	LD_LIBRARY_PATH=lib ./$(APP)
 
@@ -77,19 +66,29 @@ run: $(APP)
 # =========================
 # Testes
 # =========================
+TEST_SHARED = bin/graph_test_shared
+TEST_STATIC = bin/graph_test_static
 
-$(TEST): tests/graph_test.c
-	$(CC) $(CFLAGS) tests/graph_test.c -Llib -lgraph -o $(TEST)
+$(TEST_SHARED): tests/graph_test.c $(LIB_SHARED)
+	$(CC) $(CFLAGS) tests/graph_test.c $(LIBFLAG) -o $(TEST_SHARED)
 
-test: $(TEST)
-	LD_LIBRARY_PATH=lib ./$(TEST)
+$(TEST_STATIC): tests/graph_test.c $(LIB_STATIC)
+	$(CC) $(CFLAGS) tests/graph_test.c $(LIB_STATIC) -o $(TEST_STATIC)
+
+test: $(TEST_SHARED) $(TEST_STATIC)
+	@echo "===== Testando com biblioteca dinâmica (.so) ====="
+	LD_LIBRARY_PATH=lib ./$(TEST_SHARED)
+	@echo
+	@echo "===== Testando com biblioteca estática (.a) ====="
+	./$(TEST_STATIC)
+	@echo
 
 # =========================
 # Limpeza
 # =========================
-
 clean:
 	rm -rf build/* bin/* lib/*
+
 
 # =========================
 # Instalação
