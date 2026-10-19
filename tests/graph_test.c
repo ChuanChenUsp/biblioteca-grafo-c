@@ -5,19 +5,27 @@
 
 int main(void){
 
-    // 1. Criar um grafo g com 6 vértices
+    printf("================================\n");
+    printf("1. Criar um grafo g com 6 vértices\n");
+    // printf("================================\n");
     Graph *g;
     g = graph_create(6);
 
     assert(g != NULL);
+    printf("Quantidade de vértices: %d\n", graph_get_vertices(g));
+    assert(graph_get_vertices(g) == 6);
 
-    graph_add_edge(g, 0, 1, 4);
-    graph_add_edge(g, 0, 2, 2);
-    graph_add_edge(g, 1, 3, 5);
-    graph_add_edge(g, 2, 4, 1);
-    graph_add_edge(g, 4, 5, 3);
+    assert(graph_add_edge(g, 0, 1, 4));
+    assert(graph_add_edge(g, 0, 2, 2));
+    assert(graph_add_edge(g, 1, 3, 5));
+    assert(graph_add_edge(g, 2, 4, 1));
+    assert(graph_add_edge(g, 4, 5, 3));
+    // assert(graph_add_edge(g, 4, 6, 3)); //Deu Assertion failed.
 
-    // 2. Testar o módulo Edges
+
+    printf("================================\n");
+    printf("2. Testar o módulo Edges\n");
+    // printf("================================\n");
 
     printf("Peso de (0, 1): %d\n", graph_get_weight(g, 0, 1));
     assert(graph_get_weight(g, 0, 1) == 4);
@@ -37,7 +45,6 @@ int main(void){
     printf("Grau de 4: %d\n", graph_degree(g, 4));
     assert(graph_degree(g, 4) == 2);
 
-
     int *qtd_edges = malloc(sizeof *qtd_edges);
     assert(qtd_edges != NULL);
 
@@ -53,7 +60,9 @@ int main(void){
     }
 
 
-    // 3. Testar Traversal
+    printf("================================\n");
+    printf("3. Testar Traversal\n");
+    // printf("================================\n");
 
     printf("0 alcança 5? %d\n", graph_is_reachable(g, 0, 5));
     assert(graph_is_reachable(g, 0, 5) == true);
@@ -70,8 +79,25 @@ int main(void){
     printf("Distância em número de arestas de 3 até 5: %d\n", graph_distance_length(g, 3, 5));
     assert(graph_distance_length(g, 3, 5) == 5);
 
+    int *dist = malloc(sizeof *dist);
+    dist = graph_distance_weight_all(g, 3);
+    for(int i = 0; i < 6; i++){
+        printf("Distância ponderada de 3 até %d: %d\n", i, dist[i]);
+        assert(dist[i] == graph_distance_weight(g, i, 3));
+    }
 
-    // 4. Testar Properties no grafo inicial
+    dist = graph_distance_length_all(g, 3);
+    for(int i = 0; i < 6; i++){
+        printf("Distância em número de arestas de 3 até %d: %d\n", i, dist[i]);
+        assert(dist[i] == graph_distance_length(g, i, 3));
+    }
+
+    free(dist);
+
+
+    printf("================================\n");
+    printf("4. Testar Properties no grafo inicial\n");
+    // printf("================================\n");
 
     printf("Conectado? %d\n", graph_is_connected(g));
     assert(graph_is_connected(g) == true);
@@ -89,9 +115,11 @@ int main(void){
     assert(graph_is_bipartite(g) == true);
 
 
-    // 5. Criar um ciclo
+    printf("================================\n");
+    printf("5. Criar um ciclo\n");
+    // printf("================================\n");  
 
-    graph_add_edge(g, 1, 2, 1);
+    assert(graph_add_edge(g, 1, 2, 1));
 
     printf("Conectado? %d\n", graph_is_connected(g));
     assert(graph_is_connected(g) == true);
@@ -123,9 +151,11 @@ int main(void){
     assert(*qtd_edges == 6);
 
 
-    // 6. Testar remoção de arestas
+    printf("================================\n");
+    printf("6. Testar remoção de arestas\n");
+    // printf("================================\n");
 
-    graph_remove_edge(g, 2, 4);
+    assert(graph_remove_edge(g, 2, 4));
 
     printf("0 alcança 5? %d\n", graph_is_reachable(g, 0, 5));
     assert(graph_is_reachable(g, 0, 5) == false);
@@ -152,8 +182,7 @@ int main(void){
     assert(graph_is_forest(g) == false);
 
 
-    // Remove a aresta que estava formando o ciclo
-    graph_remove_edge(g, 1, 2);
+    assert(graph_remove_edge(g, 1, 2)); // Remove a aresta que estava formando o ciclo
 
     printf("Conectado? %d\n", graph_is_connected(g));
     assert(graph_is_connected(g) == false);
@@ -171,7 +200,9 @@ int main(void){
     assert(graph_is_bipartite(g) == true);
 
 
-    // 7. Testes mínimos de entradas inválidas
+    printf("================================\n");
+    printf("7. Testes de entradas inválidas\n");
+    // printf("================================\n");
 
     printf("Grau de 6: %d\n", graph_degree(g, 6));
     assert(graph_degree(g, 6) == -1);
@@ -188,10 +219,24 @@ int main(void){
     printf("Tamanho de componente de 6: %d\n", graph_component_size(g, 6));
     assert(graph_component_size(g, 6) == 0);
 
-
     free(edges);
     free(qtd_edges);
     graph_destroy(g);
 
+    printf("================================\n");
+    
+    printf("8. Testar overflow em graph_distance_weight\n");
+
+    g = graph_create(3);
+   
+    assert(graph_add_edge(g, 0, 1, 1500000000));
+    assert(graph_add_edge(g, 1, 2, 1000000000));
+
+    int distancia = graph_distance_weight(g, 0, 2);
+
+    printf("Distância com possível overflow: %d\n", distancia);
+
+    graph_destroy(g);
     return 0;
 }
+    
