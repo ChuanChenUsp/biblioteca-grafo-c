@@ -1,41 +1,45 @@
 # =========================
 # Variáveis Globais
-# =========================CC = gcc
-
+# =========================
 CFLAGS = -Wall -Iinclude
 PICFLAGS = -fPIC
-LIBFLAG = -Llib -lgraph
+SHAREFLAG = -Llib -lgraph
 
 OBJ = build/core.o \
       build/edges.o \
       build/traversal.o \
       build/properties.o
 
+LIB_STATIC = lib/libgraph.a
+LIB_SHARED = lib/libgraph.so
+APP_SHARED = bin/graph_shared
+APP_STATIC = bin/graph_static
+APP_SRC = app/main.c
 # =========================
 # Alvo principal
 # =========================
-all: $(LIB_STATIC) $(LIB_SHARED) $(APP)
+all: $(LIB_STATIC) $(LIB_SHARED) $(APP_SHARED) $(APP_STATIC)
 
 # =========================
 # Receitas
 # =========================
 build/core.o: src/core.c include/core.h
-	$(CC) $(CFLAGS) $(PICFLAGS) -c src/core.c -o build/core.o
+	gcc $(CFLAGS) $(PICFLAGS) -c src/core.c -o build/core.o
 
 build/edges.o: src/edges.c include/edges.h include/core.h
-	$(CC) $(CFLAGS) $(PICFLAGS) -c src/edges.c -o build/edges.o
+	gcc $(CFLAGS) $(PICFLAGS) -c src/edges.c -o build/edges.o
 
 build/traversal.o: src/traversal.c include/traversal.h include/core.h
-	$(CC) $(CFLAGS) $(PICFLAGS) -c src/traversal.c -o build/traversal.o
+	gcc $(CFLAGS) $(PICFLAGS) -c src/traversal.c -o build/traversal.o
 
 build/properties.o: src/properties.c include/properties.h include/core.h
-	$(CC) $(CFLAGS) $(PICFLAGS) -c src/properties.c -o build/properties.o
+	gcc $(CFLAGS) $(PICFLAGS) -c src/properties.c -o build/properties.o
 
 
 # =========================
 # Biblioteca estática
 # =========================
-LIB_STATIC = lib/libgraph.a
+
 $(LIB_STATIC): $(OBJ)
 	ar rcs $(LIB_STATIC) $(OBJ)
 
@@ -43,24 +47,29 @@ $(LIB_STATIC): $(OBJ)
 # =========================
 # Biblioteca dinâmica
 # =========================
-LIB_SHARED = lib/libgraph.so
 $(LIB_SHARED): $(OBJ)
-	$(CC) -shared -o $(LIB_SHARED) $(LIBFLAG) $(OBJ)
+	gcc -shared -o $(LIB_SHARED) $(SHAREFLAG) $(OBJ)
 
 
 # =========================
 # Aplicação cliente
 # =========================
-APP = bin/graph_app
-$(APP): app/main.c
-	$(CC) $(CFLAGS) app/main.c  -o $(APP)
+$(APP_SHARED): $(APP_SRC) $(LIB_SHARED)
+	gcc $(CFLAGS) $(APP_SRC) $(SHAREFLAG) -o $(APP_SHARED)
 
+$(APP_STATIC): $(APP_SRC) $(LIB_STATIC)
+	gcc $(CFLAGS) $(APP_SRC) $(LIB_STATIC) -o $(APP_STATIC)
 
 # =========================
 # Executar aplicação
 # =========================
-run: $(APP)
-	LD_LIBRARY_PATH=lib ./$(APP)
+run: run-shared
+
+run-shared: $(APP_SHARED)
+	LD_LIBRARY_PATH=lib ./$(APP_SHARED)
+
+run-static: $(APP_STATIC)
+	./$(APP_STATIC)
 
 
 # =========================
@@ -70,10 +79,10 @@ TEST_SHARED = bin/graph_test_shared
 TEST_STATIC = bin/graph_test_static
 
 $(TEST_SHARED): tests/graph_test.c $(LIB_SHARED)
-	$(CC) $(CFLAGS) tests/graph_test.c $(LIBFLAG) -o $(TEST_SHARED)
+	gcc $(CFLAGS) tests/graph_test.c $(SHAREFLAG) -o $(TEST_SHARED)
 
 $(TEST_STATIC): tests/graph_test.c $(LIB_STATIC)
-	$(CC) $(CFLAGS) tests/graph_test.c $(LIB_STATIC) -o $(TEST_STATIC)
+	gcc $(CFLAGS) tests/graph_test.c $(LIB_STATIC) -o $(TEST_STATIC)
 
 test: $(TEST_SHARED) $(TEST_STATIC)
 	@echo "===== Testando com biblioteca dinâmica (.so) ====="
@@ -101,4 +110,4 @@ install: all
 	cp -r lib/* $(PREFIX)/lib/
 	cp -r include/* $(PREFIX)/include/
 
-.PHONY: all clean run test install
+.PHONY: all clean run run-shared run-static test install

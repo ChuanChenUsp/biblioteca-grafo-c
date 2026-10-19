@@ -45,4 +45,9 @@ void graph_destroy(Graph *g){
     free(g);
 }
 
+int graph_get_vertices(Graph *g){
+    if(g == NULL) return 0;
+    return g->n;
+}
+
 

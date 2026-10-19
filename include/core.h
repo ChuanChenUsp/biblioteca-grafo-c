@@ -25,4 +25,12 @@ Graph *graph_create(unsigned int n);
  */
 void graph_destroy(Graph *g);
 
+/**
+ * @brief Obter quantidade de vértices de um grafo.
+ *
+ * @param g        Ponteiro para o grafo.
+ * @return Quantidade de vértices, 0 se grafo é vazio ou se @p g não apontada para um grafo válido
+ */
+int graph_get_vertices(Graph *g);
+
 #endif
